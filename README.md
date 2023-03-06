@@ -22,6 +22,7 @@ A collection of tools to keep mocks in line with real objects.
 - [Tracking real method calls](#tracking-real-method-calls)
 - [Configuration](#configuration)
 - [Future development](#future-development)
+- [Development](#development)
 
 ## Installation
 
@@ -354,6 +355,12 @@ I'm interested in the following contributions/discussions:
 - Advanced mock contracts (custom rules, custom classes support, etc.)
 - Methods delegation (e.g., `.perform_async -> #perform`, `.call -> #call`)
 - Exceptions support in contracts verification
+
+## Development
+```sh
+bundle install
+```
+
 
 ## Contributing
 

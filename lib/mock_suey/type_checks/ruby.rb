@@ -3,6 +3,7 @@
 gem "rbs", "~> 2.0"
 require "rbs"
 require "rbs/test"
+require "pry"
 
 require "set"
 require "pathname"
@@ -107,14 +108,19 @@ module MockSuey
         @load_dirs = Array(load_dirs)
       end
 
+      # call_obj: MethodCall
       def typecheck!(call_obj, raise_on_missing: false)
-        method_name = call_obj.method_name
+        method_name = call_obj.method_name # String
 
+        binding.pry
+        # https://github.com/ruby/rbs/blob/v1.4.0/lib/rbs/test.rb#L28-L32
         method_call = RBS::Test::ArgumentsReturn.return(
           arguments: call_obj.arguments,
           value: call_obj.return_value
         )
 
+
+        # https://github.com/ruby/rbs/blob/v1.4.0/lib/rbs/test.rb#L28-L32
         call_trace = RBS::Test::CallTrace.new(
           method_name:,
           method_call:,
@@ -123,8 +129,11 @@ module MockSuey
           block_given: false
         )
 
+        # RBS::Definition::Method
+        # wwju: research more
         method_type = type_for(call_obj.receiver_class, method_name)
 
+        # require 'pry'; binding.pry
         unless method_type
           raise MissingSignature, "No signature found for #{call_obj.method_desc}" if raise_on_missing
           return
@@ -134,6 +143,7 @@ module MockSuey
         instance_class = call_obj.receiver_class
         class_class = call_obj.receiver_class.singleton_class? ? call_obj.receiver_class : call_obj.receiver_class.singleton_class
 
+      # require 'pry'; binding.pry
         typecheck = RBS::Test::TypeCheck.new(
           self_class:,
           builder:,

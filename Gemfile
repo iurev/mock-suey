@@ -5,6 +5,10 @@ source "https://rubygems.org"
 gem "debug", platform: :mri
 gem "rbs", "~> 2.0"
 gem "rspec"
+gem "pry"
+gem 'sorbet'
+gem 'sorbet-runtime'
+gem 'tapioca', require: false
 
 gemspec
 

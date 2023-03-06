@@ -28,6 +28,9 @@ module MockSuey
           receiver_class, method_name = receiver_class.instance_class, :initialize
         end
 
+        if obj.is_a?(::RSpec::Mocks::TestDouble)
+          require 'pry'; binding.pry
+        end
         method_call = MockSuey::MethodCall.new(
           receiver_class:,
           method_name:,

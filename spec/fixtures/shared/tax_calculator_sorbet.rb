@@ -19,7 +19,6 @@ class TaxCalculator
     return val
   end
 
-  sig {params(val: Integer).returns(Integer)}
   def for_income(val)
     return if val < 0
 

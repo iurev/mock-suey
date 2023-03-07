@@ -37,7 +37,8 @@ describe "#proxy_method_invoked" do
       receiver_class: TestHash,
       method_name: :key?,
       arguments: ["x"],
-      return_value: true
+      return_value: true,
+      mocked_instance: target,
     )
   end
 

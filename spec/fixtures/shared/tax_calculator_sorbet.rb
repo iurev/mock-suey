@@ -15,7 +15,7 @@ class TaxCalculator
   }.freeze
 
   sig {params(val: Integer).returns(Integer)}
-  def test(val)
+  def my_test(val)
     return val
   end
 

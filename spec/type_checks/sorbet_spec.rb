@@ -52,7 +52,6 @@ describe MockSuey::TypeChecks::Sorbet do
         mocked_instance: TaxCalculator.new,
       )
 
-      # require 'pry'; binding.pry
       expect do
         checker.typecheck!(mcall)
       end.not_to raise_error
@@ -65,6 +64,26 @@ describe MockSuey::TypeChecks::Sorbet do
         arguments: ["120"],
         return_value: 120,
         mocked_instance: TaxCalculator.new,
+      )
+      # TODO: mocked_instance
+
+      expect do
+        checker.typecheck!(mcall)
+      end.to raise_error(TypeError, /.*val.*Expected.*Integer.*got.*String.*/)
+    end
+
+    it "type-checks custom classes" do
+      target = instance_double("TaxCalculator")
+      allow(target).to receive(:my_test).and_return("asdf")
+      # expect(target.key?("x")).to eq(true)
+
+      # binding.pry
+      mcall = MockSuey::MethodCall.new(
+        receiver_class: TaxCalculator,
+        method_name: :my_test,
+        arguments: [120],
+        return_value: 120,
+        mocked_instance: target,
       )
 
       expect do

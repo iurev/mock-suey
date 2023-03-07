@@ -3,8 +3,12 @@
 source "https://rubygems.org"
 
 gem "debug", platform: :mri
-gem "rbs"
+gem "rbs", "~> 2.0"
 gem "rspec"
+gem "pry", require: false
+gem 'sorbet', require: false
+gem 'sorbet-runtime', require: false, path: "/home/yu/projects/sorbet/gems/sorbet-runtime"
+gem 'tapioca', require: false
 
 gemspec
 

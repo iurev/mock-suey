@@ -91,6 +91,8 @@ module MockSuey
       on_mocked_callbacks << block
     end
 
+    # wwju
+    # MethodCall
     def handle_mocked_call(call_obj)
       on_mocked_callbacks.each { _1.call(call_obj) }
     end

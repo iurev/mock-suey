@@ -14,6 +14,8 @@ describe MockSuey::TypeChecks::Ruby do
         arguments: ["first"],
         return_value: 0
       )
+      # require 'pry'; binding.pry
+      # require 'pry'; binding.pry
 
       expect do
         checker.typecheck!(mcall)
@@ -48,6 +50,7 @@ describe MockSuey::TypeChecks::Ruby do
         return_value: 87
       )
 
+      # require 'pry'; binding.pry
       expect do
         checker.typecheck!(mcall)
       end.to raise_error(

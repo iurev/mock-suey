@@ -28,6 +28,8 @@ require "mock_suey/rspec/mock_context"
 
 RSpec.configure do |config|
   config.before(:suite) do
+    ## wwju
+    # require 'pry'; binding.pry
     MockSuey.cook
   end
 

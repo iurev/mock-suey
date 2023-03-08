@@ -13,6 +13,44 @@ describe MockSuey::TypeChecks::Sorbet do
       described_class.new
     end
 
+    describe "build-in types" do
+      it "hash" do
+        target = {}
+
+        allow(target).to receive(:key?).and_return(true)
+        expect(target.key?("x")).to eq(true)
+
+        mcall = MockSuey::MethodCall.new(
+          receiver_class: Hash,
+          method_name: :key?,
+          arguments: ["x"],
+          return_value: true,
+          mocked_instance: target
+        )
+
+        expect do
+          checker.typecheck!(mcall, raise_on_missing: true)
+        end.not_to raise_error
+      end
+      # let(:target) { 1 }
+
+      # it do
+      #   allow(target).to receive(:to_s).and_return("custom_response")
+
+      #   mcall = MockSuey::MethodCall.new(
+      #     receiver_class: target.class,
+      #     method_name: :to_s,
+      #     arguments: [],
+      #     return_value: "custom_response",
+      #     mocked_instance: target
+      #   )
+
+      #   expect do
+      #     checker.typecheck!(mcall)
+      #   end.not_to raise_error
+      # end
+    end
+
     describe "type check without signatures" do
       def create_mcall(target)
         mcall = MockSuey::MethodCall.new(

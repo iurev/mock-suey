@@ -7,7 +7,11 @@ class TaxCalculatorSorbet < TaxCalculator
   extend T::Sig
 
   sig { params(val: Integer).returns(Integer) }
-  def self.singleton_test(val)
+  def self.class_method_test(val)
+    val
+  end
+
+  def self.class_method_test_no_sig(val)
     val
   end
 

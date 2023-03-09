@@ -15,10 +15,10 @@ module MockSuey
       end
 
       def typecheck!(method_call, raise_on_missing: false)
-        require 'pry'; binding.pry
         method_name = method_call.method_name
         mocked_obj = method_call.mocked_instance
         is_singleton = method_call.receiver_class.singleton_class?
+        is_mocked_class = mocked_obj.is_a? Class
         unbound_mocked_method = if is_singleton
           mocked_obj.instance_method(method_name)
         else
@@ -26,7 +26,11 @@ module MockSuey
         end
         args = method_call.arguments
 
-        unbound_original_method = method_call.receiver_class.instance_method(method_name)
+        unbound_original_method = if is_mocked_class
+          mocked_obj.method(method_name)
+        else
+          method_call.receiver_class.instance_method(method_name)
+        end
         original_method_sig = T::Private::Methods.signature_for_method(unbound_original_method)
 
         # TODO: do not raise on missing

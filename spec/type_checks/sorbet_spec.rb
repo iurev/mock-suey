@@ -14,6 +14,34 @@ describe MockSuey::TypeChecks::Sorbet do
     end
 
     describe "type check without signatures" do
+      skip "type-checks core classes" do
+        # 'sorbet-runtime' does not include signatures for stdlib classes yet
+        mcall = MockSuey::MethodCall.new(
+          receiver_class: Array,
+          method_name: :take,
+          arguments: ["first"],
+          return_value: 0,
+          mocked_instance: Array.new
+        )
+
+        expect do
+          checker.typecheck!(mcall)
+        end.to raise_error(TypeError, /Expected.*Integer.*got.*String.*/)
+      end
+
+      it "type-checks core singleton classes" do
+        mcall = MockSuey::MethodCall.new(
+          receiver_class: Regexp.singleton_class,
+          method_name: :escape,
+          arguments: [1],
+          mocked_instance: Regexp.singleton_class
+        )
+
+        expect do
+          checker.typecheck!(mcall)
+        end.not_to raise_error
+      end
+
       def create_mcall(target)
         mcall = MockSuey::MethodCall.new(
           receiver_class: TaxCalculatorSorbet,

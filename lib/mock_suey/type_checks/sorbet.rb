@@ -14,22 +14,29 @@ module MockSuey
         @load_dirs = Array(load_dirs)
       end
 
-      def typecheck!(call_obj, raise_on_missing: false)
-        method_name = call_obj.method_name
-        mocked_instance = call_obj.mocked_instance
-        unbound_mocked_method = mocked_instance.method(method_name).unbind
-        args = call_obj.arguments
+      def typecheck!(method_call, raise_on_missing: false)
+        require 'pry'; binding.pry
+        method_name = method_call.method_name
+        mocked_obj = method_call.mocked_instance
+        is_singleton = method_call.receiver_class.singleton_class?
+        unbound_mocked_method = if is_singleton
+          mocked_obj.instance_method(method_name)
+        else
+          mocked_obj.method(method_name).unbind
+        end
+        args = method_call.arguments
 
-        unbound_original_method = call_obj.receiver_class.instance_method(method_name)
+        unbound_original_method = method_call.receiver_class.instance_method(method_name)
         original_method_sig = T::Private::Methods.signature_for_method(unbound_original_method)
 
+        # TODO: do not raise on missing
         unless original_method_sig
-          raise MissingSignature, "No signature found for #{call_obj.method_desc}" if raise_on_missing
+          raise MissingSignature, "No signature found for #{method_call.method_desc}" if raise_on_missing
           return
         end
 
         T::Private::Methods::CallValidation.validate_call(
-          mocked_instance,
+          mocked_obj,
           unbound_mocked_method,
           original_method_sig,
           args,

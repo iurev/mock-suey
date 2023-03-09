@@ -1,3 +1,4 @@
+# typed: true
 # frozen_string_literal: true
 
 # Core class duplicates to freely mock and stub without interfiring with real classes

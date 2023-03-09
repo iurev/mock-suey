@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 describe "Typed double extension" do

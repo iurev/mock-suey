@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 describe "MockSuey.stored_mocked_calls" do

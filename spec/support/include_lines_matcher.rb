@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 # Verify that the actual string contains all lines that included the specified

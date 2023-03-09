@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 require "mock_suey/type_checks/ruby"

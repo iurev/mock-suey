@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 describe "Post-suite typecheck with auto-generated types" do

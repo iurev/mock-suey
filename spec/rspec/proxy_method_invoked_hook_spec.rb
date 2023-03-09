@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 describe "#proxy_method_invoked" do

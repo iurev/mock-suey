@@ -1,7 +1,12 @@
+# typed: true
 # frozen_string_literal: true
+
+require 'sorbet-runtime'
+require "tapioca"
 
 require "mock_suey/type_checks/sorbet"
 require_relative "../fixtures/shared/tax_calculator_sorbet"
+# require_relative "../fixtures/sig/tax_calculator_sorbet.rbi"
 
 describe MockSuey::TypeChecks::Sorbet do
   subject(:checker) { described_class.new }
@@ -16,6 +21,7 @@ describe MockSuey::TypeChecks::Sorbet do
     describe "build-in types" do
       it "hash" do
         target = {}
+        # require 'pry'; binding.pry
 
         allow(target).to receive(:key?).and_return(true)
         expect(target.key?("x")).to eq(true)

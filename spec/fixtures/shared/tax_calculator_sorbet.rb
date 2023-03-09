@@ -1,6 +1,7 @@
+# typed: true
 # frozen_string_literal: true
 
-require "sorbet-runtime"
+require 'sorbet-runtime'
 require_relative "./tax_calculator"
 
 class TaxCalculatorSorbet < TaxCalculator
@@ -15,3 +16,7 @@ class TaxCalculatorSorbet < TaxCalculator
     val
   end
 end
+
+# TaxCalculatorSorbet.new.simple_test("124")
+# Hash.new.key?("x")
+# Hash.new.key2?("x")

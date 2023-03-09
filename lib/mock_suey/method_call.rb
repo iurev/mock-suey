@@ -1,4 +1,6 @@
+# typed: false
 # frozen_string_literal: true
+
 
 require "mock_suey/ext/instance_class"
 

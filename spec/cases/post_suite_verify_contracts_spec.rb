@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 describe "Post-suite contracts verification", :aggregate_failures do

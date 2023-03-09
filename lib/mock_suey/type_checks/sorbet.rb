@@ -1,9 +1,14 @@
+# typed: false
 # frozen_string_literal: true
 
 require "set"
 require "pathname"
 
+require 'sorbet-runtime'
+require 'tapioca'
+
 require "mock_suey/ext/instance_class"
+# require_relative "../../../sorbet/tapioca/require.rb"
 
 module MockSuey
   module TypeChecks
@@ -22,11 +27,12 @@ module MockSuey
 
         unbound_original_method = call_obj.receiver_class.instance_method(method_name)
         original_method_sig = T::Private::Methods.signature_for_method(unbound_original_method)
+        require 'pry'; binding.pry;
 
-        unless original_method_sig
-          raise MissingSignature, "No signature found for #{call_obj.method_desc}" if raise_on_missing
-          return
-        end
+        # unless original_method_sig
+        #   raise MissingSignature, "No signature found for #{call_obj.method_desc}" if raise_on_missing
+        #   return
+        # end
 
         T::Private::Methods::CallValidation.validate_call(
           mocked_instance,

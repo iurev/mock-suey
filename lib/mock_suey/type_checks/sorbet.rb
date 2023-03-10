@@ -10,6 +10,8 @@ module MockSuey
     using Ext::InstanceClass
 
     class Sorbet
+      RAISE_ON_MISSING_MESSAGE = "Please, set raise_on_missing_types to false to disable this error. Details: https://github.com/test-prof/mock-suey#raise_on_missing_types"
+
       def initialize(load_dirs: [])
         @load_dirs = Array(load_dirs)
       end
@@ -34,13 +36,11 @@ module MockSuey
         end
         original_method_sig = T::Private::Methods.signature_for_method(unbound_original_method)
 
-        # TODO: do not raise on missing
         unless original_method_sig
-          raise MissingSignature, "No signature found for #{method_call.method_desc}" if raise_on_missing
+          raise MissingSignature, RAISE_ON_MISSING_MESSAGE if raise_on_missing
           return
         end
 
-        # require 'pry'; binding.pry
         T::Private::Methods::CallValidation.validate_call(
           mocked_obj,
           unbound_mocked_method,

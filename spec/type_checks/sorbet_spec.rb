@@ -62,7 +62,6 @@ describe MockSuey::TypeChecks::Sorbet do
         end.not_to raise_error
       end
 
-      # TODO: do not raise an error
       it "when raise_on_missing true" do
         allow(target).to receive(:simple_test_no_sig).and_return(333)
         mcall = create_mcall(target)

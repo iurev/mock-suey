@@ -23,6 +23,7 @@ module MockSuey
         is_a_class = mocked_obj.is_a? Class
         # unbound_mocked_method = if is_singleton || [:initialize, :new].include?(method_name)
         unbound_mocked_method = if is_singleton
+          require 'pry'; binding.pry
           mocked_obj.instance_method(method_name)
         else
           mocked_obj.method(method_name).unbind

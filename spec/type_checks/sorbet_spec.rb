@@ -5,6 +5,7 @@ require_relative "../fixtures/shared/tax_calculator_sorbet"
 
 
 # TODO: make it shorter using shared_examples or method
+# TODO: add singleton classes checks
 describe MockSuey::TypeChecks::Sorbet do
   subject(:checker) { described_class.new }
 
@@ -29,20 +30,6 @@ describe MockSuey::TypeChecks::Sorbet do
           checker.typecheck!(mcall)
         end.to raise_error(TypeError, /Expected.*Integer.*got.*String.*/)
       end
-
-      # TODO: handle singleton_classes
-      # it "type-checks core singleton classes" do
-      #   mcall = MockSuey::MethodCall.new(
-      #     receiver_class: Regexp.singleton_class,
-      #     method_name: :escape,
-      #     arguments: [1],
-      #     mocked_instance: Regexp.singleton_class
-      #   )
-
-      #   expect do
-      #     checker.typecheck!(mcall)
-      #   end.not_to raise_error
-      # end
 
       def create_mcall(target)
         mcall = MockSuey::MethodCall.new(
@@ -148,9 +135,7 @@ describe MockSuey::TypeChecks::Sorbet do
             mocked_instance: TaxCalculatorSorbet
           )
 
-          expect do
-            checker.typecheck!(mcall)
-          end.not_to raise_error
+          expect { checker.typecheck!(mcall) }.not_to raise_error
         end
 
         it "when incorrect" do

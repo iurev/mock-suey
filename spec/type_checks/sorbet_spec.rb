@@ -4,9 +4,7 @@ require "mock_suey/type_checks/sorbet"
 require_relative "../fixtures/shared/tax_calculator_sorbet"
 
 
-# TODO: make it shorter using shared_examples or method
 # TODO: add singleton classes checks
-# TODO: handle blocks
 describe MockSuey::TypeChecks::Sorbet do
   subject(:checker) { described_class.new }
 

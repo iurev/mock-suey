@@ -82,6 +82,38 @@ Typed doubles rely on the type signatures being defined. What if you don't have 
 
 2) Auto-generating types on-the-fly from the real call traces (see below).
 
+### Using with Sorbet
+
+To use MockSuey with RBS, configure it as follows:
+
+```ruby
+MockSuey.configure do |config|
+  config.type_check = :ruby
+  # Optional: specify signature directries to use ("sig" is used by default)
+  # config.signature_load_dirs = ["sig"]
+  # Optional: specify whether to raise an exception if no signature found
+  # config.raise_on_missing_types = false
+end
+```
+
+Make sure that `rbs` gem is present in the bundle (MockSuey doesn't require it as a runtime dependency).
+
+That's it! Now all mocked methods are type-checked.
+
+### raise_on_missing_types
+
+Gem `sorbet-runtime` does not load signatures for stdlib types (Integer, String, etc...) into runtime.
+Checking types for Integer, String, etc is only available through `rbs typecheck` command which uses [custom ruby binary](https://github.com/sorbet/sorbet/blob/master/docs/running-compiled-code.md).
+
+Therefore, you should consider changing `raise_on_missing_types` to `false` if you use Sorbet.
+
+```ruby
+MockSuey.configure do |config|
+  config.type_check = :sorbet
+  config.raise_on_missing_types = false
+end
+```
+
 ## Mock context
 
 Mock context is a re-usable mocking/stubbing configuration. Keeping a _library of mocks_
@@ -369,6 +401,7 @@ The gem is available as open source under the terms of the [MIT License](http://
 
 [the-talk]: https://evilmartians.com/events/weaving-and-seaming-mocks
 [rbs]: https://github.com/ruby/rbs
+[sorbet]: https://github.com/sorbet/sorbet
 [fixturama]: https://github.com/nepalez/fixturama
 [bogus]: https://github.com/psyho/bogus
 [compact]: https://github.com/robwold/compact

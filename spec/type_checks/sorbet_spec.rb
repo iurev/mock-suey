@@ -3,7 +3,6 @@
 require "mock_suey/type_checks/sorbet"
 require_relative "../fixtures/shared/tax_calculator_sorbet"
 
-
 # TODO: add singleton classes checks
 describe MockSuey::TypeChecks::Sorbet do
   subject(:checker) { described_class.new }
@@ -22,7 +21,7 @@ describe MockSuey::TypeChecks::Sorbet do
           receiver_class: Array,
           method_name: :take,
           arguments: ["first"],
-          mocked_obj: Array.new
+          mocked_obj: []
         )
 
         expect do
@@ -31,7 +30,7 @@ describe MockSuey::TypeChecks::Sorbet do
       end
 
       def create_mcall(target)
-        mcall = MockSuey::MethodCall.new(
+        MockSuey::MethodCall.new(
           receiver_class: TaxCalculatorSorbet,
           method_name: :simple_test_no_sig,
           arguments: [120],
@@ -92,14 +91,14 @@ describe MockSuey::TypeChecks::Sorbet do
 
         it "when block is passed correctly" do
           allow(target).to receive(:simple_block).and_yield("444")
-          block = proc {|_n| "333" }
+          block = proc { |_n| "333" }
 
           mcall = MockSuey::MethodCall.new(
             receiver_class: TaxCalculatorSorbet,
             method_name: :simple_block,
             arguments: [123],
             mocked_obj: target,
-            block: block,
+            block: block
           )
 
           expect(checker.typecheck!(mcall)).to eq("333")
@@ -113,7 +112,7 @@ describe MockSuey::TypeChecks::Sorbet do
             receiver_class: TaxCalculatorSorbet,
             method_name: :simple_block,
             arguments: [123],
-            mocked_obj: target,
+            mocked_obj: target
           )
 
           expect { checker.typecheck!(mcall) }.to raise_error(TypeError)

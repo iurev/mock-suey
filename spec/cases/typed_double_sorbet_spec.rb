@@ -7,6 +7,7 @@ describe "Typed double extension" do
     it "has no affect on simple double" do
       status, output = run_rspec("double_sorbet", env: env)
 
+      expect(status).to be_success
       expect(output).to include("6 examples, 0 failures")
     end
 

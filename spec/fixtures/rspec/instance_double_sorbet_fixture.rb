@@ -6,7 +6,6 @@ require_relative "./spec_helper"
 require_relative "../shared/tax_calculator_sorbet"
 require_relative "tax_calculator_spec"
 
-
 describe AccountantSorbet do
   let!(:tax_calculator) {
     target = instance_double("TaxCalculatorSorbet")

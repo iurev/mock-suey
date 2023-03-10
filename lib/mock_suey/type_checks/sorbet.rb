@@ -18,7 +18,9 @@ module MockSuey
         method_name = method_call.method_name
         mocked_obj = method_call.mocked_instance
         is_singleton = method_call.receiver_class.singleton_class?
-        is_mocked_class = mocked_obj.is_a? Class
+        is_a_class = mocked_obj.is_a? Class
+        require 'pry'; binding.pry
+        # unbound_mocked_method = if is_singleton || [:initialize, :new].include?(method_name)
         unbound_mocked_method = if is_singleton
           mocked_obj.instance_method(method_name)
         else
@@ -26,7 +28,7 @@ module MockSuey
         end
         args = method_call.arguments
 
-        unbound_original_method = if is_mocked_class
+        unbound_original_method = if is_a_class
           mocked_obj.method(method_name)
         else
           method_call.receiver_class.instance_method(method_name)

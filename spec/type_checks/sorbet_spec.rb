@@ -3,6 +3,8 @@
 require "mock_suey/type_checks/sorbet"
 require_relative "../fixtures/shared/tax_calculator_sorbet"
 
+
+# TODO: make it shorter using shared_examples or method
 describe MockSuey::TypeChecks::Sorbet do
   subject(:checker) { described_class.new }
 
@@ -20,7 +22,6 @@ describe MockSuey::TypeChecks::Sorbet do
           receiver_class: Array,
           method_name: :take,
           arguments: ["first"],
-          return_value: 0,
           mocked_instance: Array.new
         )
 
@@ -29,6 +30,7 @@ describe MockSuey::TypeChecks::Sorbet do
         end.to raise_error(TypeError, /Expected.*Integer.*got.*String.*/)
       end
 
+      # TODO: handle singleton_classes
       # it "type-checks core singleton classes" do
       #   mcall = MockSuey::MethodCall.new(
       #     receiver_class: Regexp.singleton_class,
@@ -47,13 +49,12 @@ describe MockSuey::TypeChecks::Sorbet do
           receiver_class: TaxCalculatorSorbet,
           method_name: :simple_test_no_sig,
           arguments: [120],
-          return_value: 120,
           mocked_instance: target
         )
       end
 
       it "when raise_on_missing false" do
-        allow(target).to receive(:simple_test_no_sig).and_return(120)
+        allow(target).to receive(:simple_test_no_sig).and_return(333)
         mcall = create_mcall(target)
 
         expect do
@@ -63,7 +64,7 @@ describe MockSuey::TypeChecks::Sorbet do
 
       # TODO: do not raise an error
       it "when raise_on_missing true" do
-        allow(target).to receive(:simple_test_no_sig).and_return(120)
+        allow(target).to receive(:simple_test_no_sig).and_return(333)
         mcall = create_mcall(target)
 
         expect do
@@ -75,13 +76,12 @@ describe MockSuey::TypeChecks::Sorbet do
     describe "type check argument type" do
       describe "for mocked instance methods" do
         it "when correct" do
-          allow(target).to receive(:simple_test).and_return(120)
+          allow(target).to receive(:simple_test).and_return(333)
 
           mcall = MockSuey::MethodCall.new(
             receiver_class: TaxCalculatorSorbet,
             method_name: :simple_test,
             arguments: [120],
-            return_value: 120,
             mocked_instance: target
           )
 
@@ -91,13 +91,12 @@ describe MockSuey::TypeChecks::Sorbet do
         end
 
         it "when incorrect" do
-          allow(target).to receive(:simple_test).and_return(120)
+          allow(target).to receive(:simple_test).and_return(333)
 
           mcall = MockSuey::MethodCall.new(
             receiver_class: TaxCalculatorSorbet,
             method_name: :simple_test,
             arguments: ["120"],
-            return_value: 120,
             mocked_instance: target
           )
 
@@ -106,15 +105,47 @@ describe MockSuey::TypeChecks::Sorbet do
           end.to raise_error(TypeError, /Parameter.*val.*Expected.*Integer.*got.*String.*/)
         end
       end
+
       describe "for mocked class methods" do
+        describe "initialize" do
+          let(:target) { instance_double("AccountantSorbet") }
+
+          it "called correctly" do
+            allow(target).to receive(:new)
+
+            mcall = MockSuey::MethodCall.new(
+              receiver_class: AccountantSorbet,
+              method_name: :new,
+              arguments: [TaxCalculator.new],
+              mocked_instance: target
+            )
+
+            expect { checker.typecheck!(mcall) }.not_to raise_error
+          end
+
+          it "called incorrectly" do
+            allow(target).to receive(:new)
+
+            mcall = MockSuey::MethodCall.new(
+              receiver_class: AccountantSorbet,
+              method_name: :new,
+              arguments: ["incorrect"],
+              mocked_instance: target
+            )
+
+            expect do
+              checker.typecheck!(mcall)
+            end.to raise_error
+          end
+        end
+
         it "when correct" do
-          allow(TaxCalculatorSorbet).to receive(:class_method_test).and_return(120)
+          allow(TaxCalculatorSorbet).to receive(:class_method_test).and_return(333)
 
           mcall = MockSuey::MethodCall.new(
             receiver_class: TaxCalculatorSorbet,
             method_name: :class_method_test,
             arguments: [120],
-            return_value: 120,
             mocked_instance: TaxCalculatorSorbet
           )
 
@@ -124,13 +155,12 @@ describe MockSuey::TypeChecks::Sorbet do
         end
 
         it "when incorrect" do
-          allow(TaxCalculatorSorbet).to receive(:class_method_test).and_return(120)
+          allow(TaxCalculatorSorbet).to receive(:class_method_test).and_return(333)
 
           mcall = MockSuey::MethodCall.new(
             receiver_class: TaxCalculatorSorbet,
             method_name: :class_method_test,
             arguments: ["120"],
-            return_value: 120,
             mocked_instance: TaxCalculatorSorbet
           )
 
@@ -143,31 +173,29 @@ describe MockSuey::TypeChecks::Sorbet do
 
     describe "type check return type" do
       describe "for mocked instance methods" do
-        it "when correct" do
-          allow(target).to receive(:simple_test).and_return(120)
+        it "when simple type is correct" do
+          allow(target).to receive(:simple_test).and_return(333)
 
           mcall = MockSuey::MethodCall.new(
             receiver_class: TaxCalculatorSorbet,
             method_name: :simple_test,
             arguments: [120],
-            return_value: 120,
             mocked_instance: target
           )
 
-          expect(checker.typecheck!(mcall)).to eq(120)
+          expect(checker.typecheck!(mcall)).to eq(333)
           expect do
             checker.typecheck!(mcall)
           end.not_to raise_error
         end
 
-        it "when incorrect" do
+        it "when simple type is incorrect" do
           allow(target).to receive(:simple_test).and_return("incorrect")
 
           mcall = MockSuey::MethodCall.new(
             receiver_class: TaxCalculatorSorbet,
             method_name: :simple_test,
             arguments: [120],
-            return_value: 120,
             mocked_instance: target
           )
 
@@ -175,21 +203,48 @@ describe MockSuey::TypeChecks::Sorbet do
             checker.typecheck!(mcall)
           end.to raise_error(TypeError, /.*Return value.*Expected.*Integer.*got.*String.*/)
         end
+
+        it "when custom class is incorrect" do
+          allow(target).to receive(:for_income).and_return("incorrect")
+
+          mcall = MockSuey::MethodCall.new(
+            receiver_class: TaxCalculatorSorbet,
+            method_name: :for_income,
+            arguments: [120],
+            mocked_instance: target
+          )
+
+          expect do
+            checker.typecheck!(mcall)
+          end.to raise_error(TypeError, /.*Return value.*Expected.*TaxCalculator::Result.*got.*String.*/)
+        end
+
+        it "when custom class is correct" do
+          allow(target).to receive(:for_income).and_return(TaxCalculator::Result.new)
+
+          mcall = MockSuey::MethodCall.new(
+            receiver_class: TaxCalculatorSorbet,
+            method_name: :for_income,
+            arguments: [120],
+            mocked_instance: target
+          )
+
+          expect { checker.typecheck!(mcall) }.not_to raise_error
+        end
       end
 
       describe "for mocked class methods" do
         it "when correct" do
-          allow(TaxCalculatorSorbet).to receive(:class_method_test).and_return(120)
+          allow(TaxCalculatorSorbet).to receive(:class_method_test).and_return(333)
 
           mcall = MockSuey::MethodCall.new(
             receiver_class: TaxCalculatorSorbet,
             method_name: :class_method_test,
             arguments: [120],
-            return_value: 120,
             mocked_instance: TaxCalculatorSorbet
           )
 
-          expect(checker.typecheck!(mcall)).to eq(120)
+          expect(checker.typecheck!(mcall)).to eq(333)
           expect do
             checker.typecheck!(mcall)
           end.not_to raise_error
@@ -202,7 +257,6 @@ describe MockSuey::TypeChecks::Sorbet do
             receiver_class: TaxCalculatorSorbet,
             method_name: :class_method_test,
             arguments: [120],
-            return_value: 120,
             mocked_instance: TaxCalculatorSorbet
           )
 

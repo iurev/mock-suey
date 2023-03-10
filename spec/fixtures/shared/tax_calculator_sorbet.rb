@@ -44,9 +44,10 @@ class AccountantSorbet < Accountant
     @tax_calculator = tax_calculator
   end
 
-  # def net_pay(val)
-  #   val - tax_calculator.for_income(val)
-  # end
+  sig { params(val: Integer).returns(Integer) }
+  def net_pay(val)
+    val - tax_calculator.for_income(val)
+  end
 
   # def tax_for(val)
   #   tax_calculator.for_income(val).result

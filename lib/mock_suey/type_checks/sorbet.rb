@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+gem "sorbet-runtime"
+require "sorbet-runtime"
 require "set"
 require "pathname"
 
+require_relative "../sorbet_rspec"
 require "mock_suey/ext/instance_class"
 
 module MockSuey
@@ -21,7 +24,6 @@ module MockSuey
         mocked_obj = method_call.mocked_instance
         is_singleton = method_call.receiver_class.singleton_class?
         is_a_class = mocked_obj.is_a? Class
-        # unbound_mocked_method = if is_singleton || [:initialize, :new].include?(method_name)
         unbound_mocked_method = if is_singleton
           mocked_obj.instance_method(method_name)
         else

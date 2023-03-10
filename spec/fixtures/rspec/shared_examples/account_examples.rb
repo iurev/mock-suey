@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 shared_examples "accountant" do
-  subject { Accountant.new(tax_calculator: tax_calculator) }
+  subject {
+    T::Configuration.call_validation_error_handler = lambda do |signature, opts|
+      return if opts[:value].is_a? RSpec::Mocks::Double
+      T::Configuration.call_validation_error_handler_default(signature, opts)
+    end
+    AccountantSorbet.new(tax_calculator: tax_calculator)
+  }
 
   it "#net_pay" do
     expect(subject.net_pay(89)).to eq 47

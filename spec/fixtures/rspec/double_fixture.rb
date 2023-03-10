@@ -7,7 +7,7 @@ require_relative "../shared/tax_calculator"
 require_relative "tax_calculator_spec"
 
 describe Accountant do
-  let(:tax_calculator) { double("TaxCalculator") }
+  let(:tax_calculator) { double("TaxCalculatorSorbet") }
 
   before do
     allow(tax_calculator).to receive(:for_income).and_return(42)

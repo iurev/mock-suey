@@ -109,6 +109,7 @@ Therefore, you should consider changing `raise_on_missing_types` to `false` if y
 
 ```ruby
 MockSuey.configure do |config|
+  config.type_check = :sorbet
   config.raise_on_missing_types = false
 end
 ```
@@ -400,6 +401,7 @@ The gem is available as open source under the terms of the [MIT License](http://
 
 [the-talk]: https://evilmartians.com/events/weaving-and-seaming-mocks
 [rbs]: https://github.com/ruby/rbs
+[sorbet]: https://github.com/sorbet/sorbet
 [fixturama]: https://github.com/nepalez/fixturama
 [bogus]: https://github.com/psyho/bogus
 [compact]: https://github.com/robwold/compact

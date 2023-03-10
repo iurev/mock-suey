@@ -32,6 +32,11 @@ class TaxCalculatorSorbet < TaxCalculator
     val
   end
 
+  sig { params(val: Integer, blk: T.proc.params(a: Integer).returns(String)).returns(String) }
+  def simple_block(val, &blk)
+    blk.call(val)
+  end
+
   sig { params(val: Integer).returns(Integer) }
   def simple_test(val)
     val

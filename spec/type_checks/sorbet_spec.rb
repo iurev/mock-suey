@@ -91,6 +91,35 @@ describe MockSuey::TypeChecks::Sorbet do
             checker.typecheck!(mcall)
           end.to raise_error(TypeError, /Parameter.*val.*Expected.*Integer.*got.*String.*/)
         end
+
+        it "when block is passed correctly" do
+          allow(target).to receive(:simple_block).and_yield("444")
+          block = proc {|_n| "333" }
+
+          mcall = MockSuey::MethodCall.new(
+            receiver_class: TaxCalculatorSorbet,
+            method_name: :simple_block,
+            arguments: [123],
+            mocked_obj: target,
+            block: block,
+          )
+
+          expect(checker.typecheck!(mcall)).to eq("333")
+          expect { checker.typecheck!(mcall) }.not_to raise_error
+        end
+
+        it "when no block has been passed" do
+          allow(target).to receive(:simple_block).and_yield("444")
+
+          mcall = MockSuey::MethodCall.new(
+            receiver_class: TaxCalculatorSorbet,
+            method_name: :simple_block,
+            arguments: [123],
+            mocked_obj: target,
+          )
+
+          expect { checker.typecheck!(mcall) }.to raise_error(TypeError)
+        end
       end
 
       describe "for mocked class methods" do

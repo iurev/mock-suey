@@ -58,6 +58,23 @@ describe "#proxy_method_invoked" do
     )
   end
 
+  it "#instance_double with block" do
+    target = instance_double(TestHash)
+    allow(target).to receive(:each_key).and_yield("444")
+
+    block = proc { |_| "333" }
+    expect(target.each_key { |n| n }).to eq("444")
+
+    expect(mcalls.size).to eq(1)
+    expect(mcalls.first).to have_attributes(
+      receiver_class: TestHash,
+      method_name: :each_key,
+      arguments: [],
+      mocked_obj: target,
+      block: block
+    )
+  end
+
   it "allow(instance).to" do
     target = {}
 

@@ -42,13 +42,14 @@ module MockSuey
           raise MissingSignature, RAISE_ON_MISSING_MESSAGE if raise_on_missing
           return
         end
+        block = method_call.block
 
         T::Private::Methods::CallValidation.validate_call(
           mocked_obj,
           unbound_mocked_method,
           original_method_sig,
           args,
-          nil
+          block
         )
       end
     end

@@ -13,6 +13,7 @@ module MockSuey
     :has_kwargs,
     :metadata,
     :mocked_obj,
+    :block,
     keyword_init: true
   )
     def initialize(**)

@@ -21,7 +21,7 @@ module MockSuey
 
       def typecheck!(method_call, raise_on_missing: false)
         method_name = method_call.method_name
-        mocked_obj = method_call.mocked_instance
+        mocked_obj = method_call.mocked_obj
         is_singleton = method_call.receiver_class.singleton_class?
         is_a_class = mocked_obj.is_a? Class
         unbound_mocked_method = if is_singleton

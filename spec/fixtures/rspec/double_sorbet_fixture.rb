@@ -5,8 +5,6 @@ $LOAD_PATH.unshift File.expand_path("../../../../lib", __FILE__)
 require_relative "./spec_helper"
 require_relative "../shared/tax_calculator_sorbet"
 require_relative "tax_calculator_spec"
-require "sorbet-runtine"
-require "mock-suey/sorbet_rspec"
 
 describe AccountantSorbet do
   before do
@@ -19,7 +17,7 @@ describe AccountantSorbet do
 
   include_examples "accountant", AccountantSorbet do
     it "incorrect" do
-      # NOTE: in fact, sorbet-runtine also checks for type errors during runtime for ALL types
+      # NOTE: in fact, sorbet-runtine also checks for type errors for ALL types
       expect { subject.net_pay("incorrect") }.to raise_error(TypeError)
     end
   end

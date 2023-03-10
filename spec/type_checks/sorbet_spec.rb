@@ -24,7 +24,7 @@ describe MockSuey::TypeChecks::Sorbet do
           receiver_class: Array,
           method_name: :take,
           arguments: ["first"],
-          mocked_instance: Array.new
+          mocked_obj: Array.new
         )
 
         expect do
@@ -37,7 +37,7 @@ describe MockSuey::TypeChecks::Sorbet do
           receiver_class: TaxCalculatorSorbet,
           method_name: :simple_test_no_sig,
           arguments: [120],
-          mocked_instance: target
+          mocked_obj: target
         )
       end
 
@@ -69,7 +69,7 @@ describe MockSuey::TypeChecks::Sorbet do
             receiver_class: TaxCalculatorSorbet,
             method_name: :simple_test,
             arguments: [120],
-            mocked_instance: target
+            mocked_obj: target
           )
 
           expect do
@@ -84,7 +84,7 @@ describe MockSuey::TypeChecks::Sorbet do
             receiver_class: TaxCalculatorSorbet,
             method_name: :simple_test,
             arguments: ["120"],
-            mocked_instance: target
+            mocked_obj: target
           )
 
           expect do
@@ -104,7 +104,7 @@ describe MockSuey::TypeChecks::Sorbet do
               receiver_class: AccountantSorbet,
               method_name: :initialize,
               arguments: [{tax_calculator: TaxCalculator.new}],
-              mocked_instance: target
+              mocked_obj: target
             )
 
             expect { checker.typecheck!(mcall) }.not_to raise_error
@@ -117,7 +117,7 @@ describe MockSuey::TypeChecks::Sorbet do
               receiver_class: AccountantSorbet,
               method_name: :initialize,
               arguments: [{tax_calculator: "incorrect"}],
-              mocked_instance: target
+              mocked_obj: target
             )
 
             expect do
@@ -133,7 +133,7 @@ describe MockSuey::TypeChecks::Sorbet do
             receiver_class: TaxCalculatorSorbet,
             method_name: :class_method_test,
             arguments: [120],
-            mocked_instance: TaxCalculatorSorbet
+            mocked_obj: TaxCalculatorSorbet
           )
 
           expect { checker.typecheck!(mcall) }.not_to raise_error
@@ -146,7 +146,7 @@ describe MockSuey::TypeChecks::Sorbet do
             receiver_class: TaxCalculatorSorbet,
             method_name: :class_method_test,
             arguments: ["120"],
-            mocked_instance: TaxCalculatorSorbet
+            mocked_obj: TaxCalculatorSorbet
           )
 
           expect do
@@ -165,7 +165,7 @@ describe MockSuey::TypeChecks::Sorbet do
             receiver_class: TaxCalculatorSorbet,
             method_name: :simple_test,
             arguments: [120],
-            mocked_instance: target
+            mocked_obj: target
           )
 
           expect(checker.typecheck!(mcall)).to eq(333)
@@ -181,7 +181,7 @@ describe MockSuey::TypeChecks::Sorbet do
             receiver_class: TaxCalculatorSorbet,
             method_name: :simple_test,
             arguments: [120],
-            mocked_instance: target
+            mocked_obj: target
           )
 
           expect do
@@ -196,7 +196,7 @@ describe MockSuey::TypeChecks::Sorbet do
             receiver_class: TaxCalculatorSorbet,
             method_name: :for_income,
             arguments: [120],
-            mocked_instance: target
+            mocked_obj: target
           )
 
           expect do
@@ -211,7 +211,7 @@ describe MockSuey::TypeChecks::Sorbet do
             receiver_class: TaxCalculatorSorbet,
             method_name: :for_income,
             arguments: [120],
-            mocked_instance: target
+            mocked_obj: target
           )
 
           expect { checker.typecheck!(mcall) }.not_to raise_error
@@ -226,7 +226,7 @@ describe MockSuey::TypeChecks::Sorbet do
             receiver_class: TaxCalculatorSorbet,
             method_name: :class_method_test,
             arguments: [120],
-            mocked_instance: TaxCalculatorSorbet
+            mocked_obj: TaxCalculatorSorbet
           )
 
           expect(checker.typecheck!(mcall)).to eq(333)
@@ -242,7 +242,7 @@ describe MockSuey::TypeChecks::Sorbet do
             receiver_class: TaxCalculatorSorbet,
             method_name: :class_method_test,
             arguments: [120],
-            mocked_instance: TaxCalculatorSorbet
+            mocked_obj: TaxCalculatorSorbet
           )
 
           expect do

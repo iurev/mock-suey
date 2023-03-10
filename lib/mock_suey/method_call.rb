@@ -5,7 +5,6 @@ require "mock_suey/ext/instance_class"
 module MockSuey
   using Ext::InstanceClass
 
-  # TODO: rename mocked_instance into mocked_obj
   class MethodCall < Struct.new(
     :receiver_class,
     :method_name,
@@ -13,7 +12,7 @@ module MockSuey
     :return_value,
     :has_kwargs,
     :metadata,
-    :mocked_instance,
+    :mocked_obj,
     keyword_init: true
   )
     def initialize(**)

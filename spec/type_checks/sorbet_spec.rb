@@ -111,12 +111,12 @@ describe MockSuey::TypeChecks::Sorbet do
           let(:target) { instance_double("AccountantSorbet") }
 
           it "called correctly" do
-            allow(target).to receive(:new)
+            allow(target).to receive(:initialize)
 
             mcall = MockSuey::MethodCall.new(
               receiver_class: AccountantSorbet,
-              method_name: :new,
-              arguments: [TaxCalculator.new],
+              method_name: :initialize,
+              arguments: [{tax_calculator: TaxCalculator.new}],
               mocked_instance: target
             )
 
@@ -124,18 +124,18 @@ describe MockSuey::TypeChecks::Sorbet do
           end
 
           it "called incorrectly" do
-            allow(target).to receive(:new)
+            allow(target).to receive(:initialize)
 
             mcall = MockSuey::MethodCall.new(
               receiver_class: AccountantSorbet,
-              method_name: :new,
-              arguments: ["incorrect"],
+              method_name: :initialize,
+              arguments: [{tax_calculator: "incorrect"}],
               mocked_instance: target
             )
 
             expect do
               checker.typecheck!(mcall)
-            end.to raise_error
+            end.to raise_error(TypeError, /.*Parameter.*tax_calculator.*Expected.*TaxCalculator.*got.*String.*/)
           end
         end
 

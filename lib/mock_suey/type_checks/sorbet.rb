@@ -19,7 +19,6 @@ module MockSuey
         mocked_obj = method_call.mocked_instance
         is_singleton = method_call.receiver_class.singleton_class?
         is_a_class = mocked_obj.is_a? Class
-        require 'pry'; binding.pry
         # unbound_mocked_method = if is_singleton || [:initialize, :new].include?(method_name)
         unbound_mocked_method = if is_singleton
           mocked_obj.instance_method(method_name)
@@ -41,6 +40,7 @@ module MockSuey
           return
         end
 
+        # require 'pry'; binding.pry
         T::Private::Methods::CallValidation.validate_call(
           mocked_obj,
           unbound_mocked_method,

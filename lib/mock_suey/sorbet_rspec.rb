@@ -2,7 +2,7 @@
 require "sorbet-runtime"
 
 T::Configuration.call_validation_error_handler = lambda do |signature, opts|
-  is_mocked = opts[:value].is_a? RSpec::Mocks::TestDouble
+  is_mocked = opts[:value].is_a?(RSpec::Mocks::Double) || opts[:value].is_a?(RSpec::Mocks::VerifyingDouble)
   unless is_mocked
     return T::Configuration.send(:call_validation_error_handler_default, signature, opts)
   end

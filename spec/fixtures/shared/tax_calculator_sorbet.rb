@@ -68,7 +68,7 @@ class AccountantSorbet < Accountant
     tax_calculator.for_income(val).result
   end
 
-  sig { params(value: Integer).returns(Integer) }
+  sig { params(value: Integer).returns(Float) }
   def tax_rate_for(value)
     tax_calculator.tax_rate_for(value:)
   end

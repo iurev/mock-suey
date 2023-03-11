@@ -52,22 +52,19 @@ describe AccountantSorbet do
     end
 
     describe "with mocks" do
+      let!(:tax_calculator) do
+        target = TaxCalculatorSorbet.new
+        allow(target).to receive(:for_income).and_return(return_result)
+        target
+      end
       describe "with incorrect return" do
-        let!(:tax_calculator) do
-          target = TaxCalculatorSorbet.new
-          allow(target).to receive(:for_income).and_return(333)
-          target
-        end
+        let(:return_result) { 333 }
         skip "raises ruby error because the method is intentionally written incorrectly" do
           expect { accountant.net_pay(10) }.not_to raise_error(SystemStackError) # TODO: fix it!!!
         end
       end
       describe "with correct return" do
-        let!(:tax_calculator) do
-          target = TaxCalculatorSorbet.new
-          allow(target).to receive(:for_income).and_return(TaxCalculator::Result.new(3, 33))
-          target
-        end
+        let!(:return_result) { TaxCalculator::Result.new(3, 33) }
         skip "raises ruby error because the method is intentionally written incorrectly" do
           expect { accountant.net_pay(10) }.not_to raise_error(SystemStackError) # TODO: fix it!!!
         end
@@ -75,37 +72,37 @@ describe AccountantSorbet do
     end
   end
 
-  describe "#tax_pay_for" do
-    describe "without mocks" do
-      let(:tax_calculator) { TaxCalculatorSorbet.new }
-      it "raises ruby error because the method is intentionally written incorrectly" do
-        expect { accountant.net_pay(10) }.to raise_error(TypeError, "TaxCalculator::Result can't be coerced into Integer")
-      end
-    end
+  # describe "#tax_pay_for" do
+  #   describe "without mocks" do
+  #     let(:tax_calculator) { TaxCalculatorSorbet.new }
+  #     it "raises ruby error because the method is intentionally written incorrectly" do
+  #       expect { accountant.net_pay(10) }.to raise_error(TypeError, "TaxCalculator::Result can't be coerced into Integer")
+  #     end
+  #   end
 
-    describe "with mocks" do
-      describe "with incorrect return" do
-        let!(:tax_calculator) do
-          target = TaxCalculatorSorbet.new
-          allow(target).to receive(:for_income).and_return(333)
-          target
-        end
-        skip "raises ruby error because the method is intentionally written incorrectly" do
-          expect { accountant.net_pay(10) }.not_to raise_error(SystemStackError) # TODO: fix it!!!
-        end
-      end
-      describe "with correct return" do
-        let!(:tax_calculator) do
-          target = TaxCalculatorSorbet.new
-          allow(target).to receive(:for_income).and_return(TaxCalculator::Result.new(3, 33))
-          target
-        end
-        skip "raises ruby error because the method is intentionally written incorrectly" do
-          expect { accountant.net_pay(10) }.not_to raise_error(SystemStackError) # TODO: fix it!!!
-        end
-      end
-    end
-  end
+  #   describe "with mocks" do
+  #     describe "with incorrect return" do
+  #       let!(:tax_calculator) do
+  #         target = TaxCalculatorSorbet.new
+  #         allow(target).to receive(:for_income).and_return(333)
+  #         target
+  #       end
+  #       skip "raises ruby error because the method is intentionally written incorrectly" do
+  #         expect { accountant.net_pay(10) }.not_to raise_error(SystemStackError) # TODO: fix it!!!
+  #       end
+  #     end
+  #     describe "with correct return" do
+  #       let!(:tax_calculator) do
+  #         target = TaxCalculatorSorbet.new
+  #         allow(target).to receive(:for_income).and_return(TaxCalculator::Result.new(3, 33))
+  #         target
+  #       end
+  #       skip "raises ruby error because the method is intentionally written incorrectly" do
+  #         expect { accountant.net_pay(10) }.not_to raise_error(SystemStackError) # TODO: fix it!!!
+  #       end
+  #     end
+  #   end
+  # end
 
   # it "#tax_rate_for" do
   #   # FAILURE(verified): Result in TaxCalucalor.tax_rate_for(40) calls,

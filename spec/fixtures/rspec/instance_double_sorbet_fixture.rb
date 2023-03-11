@@ -4,7 +4,7 @@ $LOAD_PATH.unshift File.expand_path("../../../../lib", __FILE__)
 
 require_relative "./spec_helper"
 require_relative "../shared/tax_calculator_sorbet"
-# require_relative "tax_calculator_sorbet_spec"
+require_relative "tax_calculator_sorbet_spec"
 
 describe AccountantSorbet do
   let!(:tax_calculator) { instance_double("TaxCalculatorSorbet") }
@@ -40,25 +40,28 @@ describe AccountantSorbet do
       let(:tax_calculator) { TaxCalculatorSorbet.new }
       it "raises ruby error because the method is intentionally written incorrectly" do
         expect { accountant.net_pay(10) }.to raise_error(TypeError, "TaxCalculator::Result can't be coerced into Integer")
+        expect { accountant.net_pay(10) }.not_to raise_error # intentionaly
       end
     end
 
     describe "with mocks" do
       let!(:tax_calculator) do
-        target = TaxCalculatorSorbet.new
+        target = instance_double("TaxCalculatorSorbet")
         allow(target).to receive(:for_income).and_return(return_result)
         target
       end
       describe "with incorrect return" do
-        let(:return_result) { 333 }
-        skip "raises ruby error because the method is intentionally written incorrectly" do
-          expect { accountant.net_pay(10) }.not_to raise_error(SystemStackError) # TODO: fix it!!!
+        let(:return_result) { Array }
+        it "raises error because the method is intentionally written incorrectly" do
+          expect { accountant.net_pay(10) }.to raise_error(TypeError)
+          expect { accountant.net_pay(10) }.not_to raise_error # intentionaly
         end
       end
       describe "with correct return" do
         let!(:return_result) { TaxCalculator::Result.new(3, 33) }
-        skip "raises ruby error because the method is intentionally written incorrectly" do
-          expect { accountant.net_pay(10) }.not_to raise_error(SystemStackError) # TODO: fix it!!!
+        it "raises error because the method is intentionally written incorrectly" do
+          expect { accountant.net_pay(10) }.to raise_error(TypeError)
+          expect { accountant.net_pay(10) }.not_to raise_error # intentionaly
         end
       end
     end
@@ -82,6 +85,7 @@ describe AccountantSorbet do
         let(:return_result) { "incorrect" }
         it "fails with TypeError" do
           expect { accountant.tax_rate_for(10) }.to raise_error(TypeError, /.*Return value.*Expected type Float, got type String.*/)
+          expect { accountant.tax_rate_for(10) }.not_to raise_error # intentionaly
         end
       end
       describe "with correct return" do
@@ -111,6 +115,7 @@ describe AccountantSorbet do
         let(:return_result) { Array }
         it "fails with NoMethodError because tax_rate_for does not have signature" do
           expect { accountant.tax_for(10) }.to raise_error(NoMethodError)
+          expect { accountant.tax_for(10) }.not_to raise_error # intentionaly
         end
       end
       describe "with correct return" do

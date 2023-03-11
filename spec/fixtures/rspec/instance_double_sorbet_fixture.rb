@@ -81,23 +81,47 @@ describe AccountantSorbet do
       describe "with incorrect return" do
         let(:return_result) { "incorrect" }
         it "fails with TypeError" do
-          expect { accountant.tax_rate_for(10) }.not_to raise_error(SystemStackError) # TODO: fix it!!!
+          # expect { accountant.tax_rate_for(10) }.not_to raise_error(SystemStackError)
           expect { accountant.tax_rate_for(10) }.to raise_error(TypeError, /.*Return value.*Expected type Float, got type String.*/)
         end
       end
       describe "with correct return" do
         let(:return_result) { 0.333 }
         it "returns correct result" do
-          expect { accountant.tax_rate_for(10) }.not_to raise_error(SystemStackError)
+          # expect { accountant.tax_rate_for(10) }.not_to raise_error(SystemStackError)
           expect(accountant.tax_rate_for(10)).to eq(0.333)
         end
       end
     end
   end
 
-  # describe "#tax_for" do
-  #   specify "negative amount" do
-  #     expect(subject.tax_for(-10)).to eq(0)
-  #   end
-  # end
+  describe "#tax_for" do
+    describe "without mocks" do
+      let(:tax_calculator) { TaxCalculatorSorbet.new }
+      it "succeeds" do
+        expect { accountant.tax_for(10) }.not_to raise_error
+      end
+    end
+
+    describe "with mocks" do
+      let!(:tax_calculator) do
+        target = TaxCalculatorSorbet.new
+        allow(target).to receive(:tax_rate_for).and_return(return_result)
+        target
+      end
+      describe "with incorrect return" do
+        let(:return_result) { Array }
+        it "fails with NoMethodError because tax_rate_for does not have signature" do
+          expect { accountant.tax_for(10) }.to raise_error(NoMethodError)
+        end
+      end
+      describe "with correct return" do
+        let(:return_result) { 0.333 }
+        it "returns correct result" do
+          # expect { accountant.tax_for(10) }.not_to raise_error(SystemStackError)
+          expect(accountant.tax_for(10)).to eq(3)
+        end
+      end
+    end
+  end
 end

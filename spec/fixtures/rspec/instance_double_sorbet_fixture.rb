@@ -81,14 +81,12 @@ describe AccountantSorbet do
       describe "with incorrect return" do
         let(:return_result) { "incorrect" }
         it "fails with TypeError" do
-          # expect { accountant.tax_rate_for(10) }.not_to raise_error(SystemStackError)
           expect { accountant.tax_rate_for(10) }.to raise_error(TypeError, /.*Return value.*Expected type Float, got type String.*/)
         end
       end
       describe "with correct return" do
         let(:return_result) { 0.333 }
         it "returns correct result" do
-          # expect { accountant.tax_rate_for(10) }.not_to raise_error(SystemStackError)
           expect(accountant.tax_rate_for(10)).to eq(0.333)
         end
       end
@@ -118,7 +116,6 @@ describe AccountantSorbet do
       describe "with correct return" do
         let(:return_result) { 0.333 }
         it "returns correct result" do
-          # expect { accountant.tax_for(10) }.not_to raise_error(SystemStackError)
           expect(accountant.tax_for(10)).to eq(3)
         end
       end

@@ -45,7 +45,6 @@ module MockSuey
         block = method_call.block
 
         mocked_obj.define_singleton_method(method_name) { |*args, &block| method_call.return_value }
-        overrided_mocked_method = mocked_obj.method(method_name).unbind
 
         T::Private::Methods::CallValidation.validate_call(
           mocked_obj,
